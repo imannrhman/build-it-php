@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterCustomersRequest;
+use App\Http\Resources\AuthResource;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
@@ -47,11 +48,10 @@ class RegisterController extends Controller
     }
 
 
-
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Http\JsonResponse
      */
     protected function create_customers(RegisterCustomersRequest $request)
@@ -62,7 +62,7 @@ class RegisterController extends Controller
 
             $data = $validated;
 
-           $created = User::insertGetId([
+            $created = User::insertGetId([
                 'full_name' => $data['full_name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -72,10 +72,18 @@ class RegisterController extends Controller
             ]);
 
             $user = User::find($created);
+            $token = auth('api')->login($user);
 
-            return $this->responseSuccess(new UserResource($user), 'Register Customer Success');
+            return $this->responseSuccess([
+                'user' => new UserResource($user),
+                'type' => 'Bearer',
+                'access_token' => $token,
+                'expires_in' => auth('api')->factory()->getTTL() * 60,
+            ],
+                'Register Customer Success',
+                201);
         } catch (\Exception $e) {
-            return $this->responseError($e, $e->getMessage());
+            return $this->responseError($e->getTraceAsString(), $e->getMessage());
         }
     }
 

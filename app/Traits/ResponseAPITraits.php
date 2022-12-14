@@ -6,13 +6,13 @@ use Illuminate\Http\JsonResponse;
 
 trait ResponseAPITraits
 {
-    public function responseSuccess($data, $message = "Successful"): JsonResponse
+    public function responseSuccess($data, $message = "Successful", $status_code=200): JsonResponse
     {
         return response()->json([
             'status' => true,
             'message' => $message,
             'data' => $data,
-        ]);
+        ], $status_code);
     }
 
 

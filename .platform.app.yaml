@@ -28,7 +28,6 @@ hooks:
     build: |
         set -e
 
-        curl -fsS https://raw.githubusercontent.com/platformsh/snippets/main/src/install_swoole.sh | { bash /dev/fd/3 openswoole 4.11.0 ; } 3<&0
         # install a specific NodeJS version https://github.com/platformsh/snippets/
         #   -v requested version
         #   -y install Yarn
@@ -81,20 +80,13 @@ mounts:
 
 # The configuration of app when it is exposed to the web.
 web:
-
-  upstream:
-    socket_family: tcp
-    protocol: http
-    commands:
-      start: php artisan octane:start --server=swoole --host=0.0.0.0 --port=$PORT
-
     locations:
         "/":
             root: "public"
             index:
                 - index.php
-            allow: false
-            passthru: true
+            allow: true
+            passthru: "/index.php"
         "/storage":
             root: "storage/app/public"
             scripts: false

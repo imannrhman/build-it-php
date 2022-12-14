@@ -69,7 +69,7 @@ class LoginController extends Controller
                 ],
             );
         } catch (\Exception $e) {
-            return $this->responseError($e, $e->getMessage(), 500);
+            return $this->responseError($e->getTraceAsString(), $e->getMessage(), 500);
         }
     }
 }

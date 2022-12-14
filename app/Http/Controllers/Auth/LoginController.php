@@ -13,6 +13,7 @@ class LoginController extends Controller
 {
 
     use ResponseAPITraits;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -44,27 +45,31 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
 
-        $credentials = $request->only('email', 'password');
+            $credentials = $request->only('email', 'password');
 
-        $token = auth('api')->attempt($credentials);
-        if(!$token) {
-           return $this->responseError([], 'User Not Found !');
+            $token = auth('api')->attempt($credentials);
+            if (!$token) {
+                return $this->responseError([], 'User Not Found !');
+            }
+
+            $user = auth('api')->user();
+            return $this->responseSuccess(
+                [
+                    'user' => new UserResource($user),
+                    'type' => 'Bearer',
+                    'access_token' => $token,
+                    'expires_in' => auth('api')->factory()->getTTL() * 60,
+
+                ],
+            );
+        } catch (\Exception $e) {
+            return $this->responseError($e, $e->getMessage());
         }
-
-        $user = auth('api')->user();
-        return $this->responseSuccess(
-            [
-                'user' => new UserResource($user),
-                'type' => 'Bearer',
-                'access_token' => $token,
-                'expires_in' => auth('api')->factory()->getTTL() * 60,
-
-            ],
-        );
     }
 }

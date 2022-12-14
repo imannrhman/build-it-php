@@ -55,7 +55,7 @@ class LoginController extends Controller
 
             $token = auth('api')->attempt($credentials);
             if (!$token) {
-                return $this->responseError([], 'User Not Found !');
+                return $this->responseError([], 'User Not Found !', 500);
             }
 
             $user = auth('api')->user();
@@ -69,7 +69,7 @@ class LoginController extends Controller
                 ],
             );
         } catch (\Exception $e) {
-            return $this->responseError($e, $e->getMessage());
+            return $this->responseError($e, $e->getMessage(), 500);
         }
     }
 }

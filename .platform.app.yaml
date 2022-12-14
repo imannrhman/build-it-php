@@ -14,6 +14,7 @@ dependencies:
 runtime:
     extensions:
         - redis
+        - sodium
       # - blackfire # https://docs.platform.sh/integrations/observability/blackfire.
 
 build:

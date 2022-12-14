@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterCustomersRequest;
+use App\Http\Resources\UserResource;
+use App\Models\Role;
+use App\Models\User;
+use App\Traits\ResponseAPITraits;
+use Illuminate\Http\Request;
+use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -21,7 +27,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use ResponseAPITraits;
 
     /**
      * Where to redirect users after registration.
@@ -40,28 +46,50 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
+
 
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function create(array $data)
+    protected function create_customers(RegisterCustomersRequest $request)
+    {
+
+        try {
+            $validated = $request->validated();
+
+            $data = $validated;
+
+           $created = User::insertGetId([
+                'full_name' => $data['full_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'role_id' => 4,
+            ]);
+
+            $user = User::find($created);
+
+            return $this->responseSuccess(new UserResource($user), 'Register Customer Success');
+        } catch (\Exception $e) {
+            return $this->responseError($e, $e->getMessage());
+        }
+    }
+
+    protected function create_store(array $data)
+    {
+
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+    }
+
+    protected function create_professionals(array $data)
     {
         return User::create([
             'name' => $data['name'],

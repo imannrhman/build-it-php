@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('refresh_token', [\App\Http\Controllers\Auth\RefreshTokenController::class, 'refresh_token']);
+    Route::get('products', [\App\Http\Controllers\ProductController::class, 'index']);
 });
+
+
+
+require __DIR__.'/customer.php';

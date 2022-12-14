@@ -93,8 +93,8 @@ web:
             root: "public"
             index:
                 - index.php
-            allow: true
-            passthru: "/index.php"
+            allow: false
+            passthru: true
         "/storage":
             root: "storage/app/public"
             scripts: false

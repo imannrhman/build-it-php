@@ -3,21 +3,23 @@
 namespace App\Http\Resources;
 
 use Hashids\Hashids;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-class UserResource extends JsonResource
+class UserResource extends Resource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|JsonSerializable
      */
     public function toArray($request)
     {
-        $hashids = new Hashids($this->created_at, 10);
         return [
-            'id' => $hashids->encode($this->id),
+            'id' => $this->encodeId($this->id),
             'name' => $this->full_name,
             'email' => $this->email,
             'role' => $this->role->slug,

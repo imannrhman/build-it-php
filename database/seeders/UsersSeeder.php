@@ -36,7 +36,6 @@ class UsersSeeder extends Seeder
                 'email_verified_at' => now(),
                 'role_id' => 2,
             ],
-
         ];
 
         DB::table('users')->insert($users);

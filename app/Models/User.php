@@ -57,4 +57,23 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+
+    public function isAdmin() {
+        return $this->role->slug == 'administrator';
+    }
+
+    public function isStore() {
+        return $this->role->slug == 'stores';
+    }
+
+    public function isProfessionals() {
+        return $this->role->slug == 'professionals';
+    }
+
+    public function isCustomers() {
+        return $this->role->slug == 'customers';
+    }
+
+
 }

@@ -14,7 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('stores', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('avatar')->nullable();
+            $table->string('profile_banner')->nullable();
+            $table->string('contact');
+            $table->string('description');
+            $table->string('address');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

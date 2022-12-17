@@ -7,12 +7,12 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ResponseAPITraits;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
 
-    use ResponseAPITraits;
 
     /*
     |--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ class LoginController extends Controller
 
                 ],
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->responseError($e->getTraceAsString(), $e->getMessage(), 500);
         }
     }

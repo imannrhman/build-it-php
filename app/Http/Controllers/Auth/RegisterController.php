@@ -10,6 +10,8 @@ use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\ResponseAPITraits;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +30,6 @@ class RegisterController extends Controller
     |
     */
 
-    use ResponseAPITraits;
 
     /**
      * Where to redirect users after registration.
@@ -52,7 +53,7 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param array $data
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function create_customers(RegisterCustomersRequest $request)
     {
@@ -82,7 +83,7 @@ class RegisterController extends Controller
             ],
                 'Register Customer Success',
                 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->responseError($e->getTraceAsString(), $e->getMessage());
         }
     }

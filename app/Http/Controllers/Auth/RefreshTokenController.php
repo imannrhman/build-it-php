@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Traits\ResponseAPITraits;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class RefreshTokenController extends Controller
 {
-    use ResponseAPITraits;
 
-    public function refresh_token(Request $request): \Illuminate\Http\JsonResponse
+    public function refresh_token(Request $request): JsonResponse
     {
+        $token = auth('api')->refresh();
         return $this->responseSuccess(
             [
-                'user' => auth()->user(),
+                'user' => new UserResource(auth('api')->setToken($token)->user()),
                 'type' => 'Bearer',
-                'access_token' => auth()->refresh(),
+                'access_token' => $token,
                 'expires_in' => auth('api')->factory()->getTTL() * 60,
             ],
         );

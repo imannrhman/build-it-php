@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RefreshTokenController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
-
-Route::middleware('auth:api')->group(function () {
-    Route::post('refresh_token', [\App\Http\Controllers\Auth\RefreshTokenController::class, 'refresh_token']);
-    Route::get('products', [\App\Http\Controllers\ProductController::class, 'index']);
-});
+Route::post('refresh_token', [RefreshTokenController::class, 'refresh_token']);
+Route::post('login', [LoginController::class, 'login']);
 
 
 
 require __DIR__.'/customer.php';
+require __DIR__.'/product.php';

@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProfessionalRequest;
 use App\Http\Requests\UpdateProfessionalRequest;
 use App\Models\Professional;
+use Illuminate\Http\Response;
 
 class ProfessionalController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,7 +22,7 @@ class ProfessionalController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -31,8 +32,8 @@ class ProfessionalController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreProfessionalRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreProfessionalRequest $request
+     * @return Response
      */
     public function store(StoreProfessionalRequest $request)
     {
@@ -42,8 +43,8 @@ class ProfessionalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Professional  $professional
-     * @return \Illuminate\Http\Response
+     * @param Professional $professional
+     * @return Response
      */
     public function show(Professional $professional)
     {
@@ -53,8 +54,8 @@ class ProfessionalController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Professional  $professional
-     * @return \Illuminate\Http\Response
+     * @param Professional $professional
+     * @return Response
      */
     public function edit(Professional $professional)
     {
@@ -64,9 +65,9 @@ class ProfessionalController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateProfessionalRequest  $request
-     * @param  \App\Models\Professional  $professional
-     * @return \Illuminate\Http\Response
+     * @param UpdateProfessionalRequest $request
+     * @param Professional $professional
+     * @return Response
      */
     public function update(UpdateProfessionalRequest $request, Professional $professional)
     {
@@ -76,8 +77,8 @@ class ProfessionalController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Professional  $professional
-     * @return \Illuminate\Http\Response
+     * @param Professional $professional
+     * @return Response
      */
     public function destroy(Professional $professional)
     {

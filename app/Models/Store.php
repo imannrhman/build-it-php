@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     use HasFactory;
+
+    public function storeable()
+    {
+        return $this->morphTo();
+    }
 }

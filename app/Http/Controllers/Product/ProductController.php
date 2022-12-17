@@ -115,7 +115,7 @@ class ProductController extends Controller
             $product->refresh();
             return $this->responseSuccess(new ProductResource($product), "Berhasil menambah product", 201);
         } catch (Exception $e) {
-            return $this->responseError($e->getTrace(), "Internal Server Error");
+            return $this->responseError($e->getTrace(), $e->getMessage());
         }
     }
 

@@ -53,67 +53,70 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = new Product();
-        $product->sku = $request->sku;
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->minimum_order = $request->minimum_order;
-        $product->stock = $request->stock;
-        $product->description = $request->description;
-        $product->brand = $request->brand;
-        $product->save();
+        try {
+            $product = new Product();
+            $product->sku = $request->sku;
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->minimum_order = $request->minimum_order;
+            $product->stock = $request->stock;
+            $product->description = $request->description;
+            $product->brand = $request->brand;
+            $product->save();
 
 
-        $store_id = 1;
-        $store = Store::find($store_id);
-        $product->store()->associate($store);
-        $product->save();
+            $store_id = 1;
+            $store = Store::find($store_id);
+            $product->store()->associate($store);
+            $product->save();
 
 
-        $sub_category_id = $this->decodeId($request->category);
-        $sub_category = SubCategory::find($sub_category_id)->first();
-        $product->sub_categories()->associate($sub_category->id);
-        $product->save();
-        $product->refresh();
+            $sub_category_id = $this->decodeId($request->category);
+            $sub_category = SubCategory::find($sub_category_id)->first();
+            $product->sub_categories()->associate($sub_category->id);
+            $product->save();
+            $product->refresh();
 
 
-       if($request->images) {
-           $list_image = [];
+            if($request->images) {
+                $list_image = [];
 
-           foreach ($request->file('images') as $image) {
-               $productImage = new ProductImage();
-               $result = $image->storeOnCloudinaryAs("product/". $this->encodeId(1), "". $product->name ."_". now()->timestamp);
-               $productImage->image_url = $result->getSecurePath();
-               $productImage->save();
-               $productImage->refresh();
-               $list_image[] = $productImage;
-           }
-
-
-           $product->images()->saveMany($list_image);
-           $product->save();
-           $product->refresh();
-       }
+                foreach ($request->file('images') as $image) {
+                    $productImage = new ProductImage();
+                    $result = $image->storeOnCloudinaryAs("product/". $this->encodeId(1), "". $product->name ."_". now()->timestamp);
+                    $productImage->image_url = $result->getSecurePath();
+                    $productImage->save();
+                    $productImage->refresh();
+                    $list_image[] = $productImage;
+                }
 
 
-        if ($request->spesifications) {
-            $list_value_id = [];
-            foreach ($request->spesifications as $specification) {
-                $specification_value = new ProductSpecificationValue();
-                $specification_value->name =  $specification['value'];
-                $specification_value->specification_title_id =  $this->decodeId($specification['id'])[0];
-                $specification_value->save();
-                $list_value_id[] = $specification_value->id;
+                $product->images()->saveMany($list_image);
+                $product->save();
+                $product->refresh();
             }
 
 
-            $product->spesifications_value()->attach($list_value_id);
-            $product->save();
+            if ($request->spesifications) {
+                $list_value_id = [];
+                foreach ($request->spesifications as $specification) {
+                    $specification_value = new ProductSpecificationValue();
+                    $specification_value->name =  $specification['value'];
+                    $specification_value->specification_title_id =  $this->decodeId($specification['id'])[0];
+                    $specification_value->save();
+                    $list_value_id[] = $specification_value->id;
+                }
+
+
+                $product->spesifications_value()->attach($list_value_id);
+                $product->save();
+            }
+
+            $product->refresh();
+            return $this->responseSuccess(new ProductResource($product), "Berhasil menambah product", 201);
+        } catch (Exception $e) {
+            return $this->responseError($e->getTrace(), "Internal Server Error");
         }
-
-        $product->refresh();
-        return $this->responseSuccess(new ProductResource($product), 201);
-
     }
 
     /**

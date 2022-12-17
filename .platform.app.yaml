@@ -40,8 +40,8 @@ hooks:
     deploy: |
         set -e
         php artisan optimize:clear
-        php artisan migrate:refresh
-        php artisan db:seed
+        php artisan migrate:refresh -y
+        php artisan db:seed -y
 
 # The relationships of the application with services or other applications.
 # The left-hand side is the name of the relationship as it will be exposed
